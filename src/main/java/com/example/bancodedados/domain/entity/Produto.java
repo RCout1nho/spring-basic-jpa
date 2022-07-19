@@ -1,10 +1,20 @@
 package com.example.bancodedados.domain.entity;
 
+import javax.persistence.*;
 import java.math.BigDecimal;
 
+@Entity
+@Table(name = "produto")
 public class Produto {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "id")    // não é obrigatório usar pq no DB vai ser o mesmo nome do atributo, nesse caso, "id"
     private Integer id;
+
+    @Column(name = "descricao")
     private String descricao;
+
+    @Column(name = "preco_unitario")
     private BigDecimal preco;
 
     public Integer getId() {
