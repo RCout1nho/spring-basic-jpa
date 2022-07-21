@@ -1,8 +1,9 @@
 package com.example.bancodedados.rest.controller;
 
-import ch.qos.logback.core.net.server.Client;
 import com.example.bancodedados.domain.entity.Cliente;
 import com.example.bancodedados.domain.repository.Clientes;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.ExampleMatcher;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
@@ -14,15 +15,8 @@ import java.util.Optional;
 public class ClienteController {
     private Clientes clientes;
 
-
     public ClienteController(Clientes clientes) { // o spring ja faz a injeção de dependencias automaticamente
         this.clientes = clientes;
-    }
-
-    @GetMapping("/api/clientes")
-    @ResponseBody
-    public ResponseEntity<List<Cliente>> getAllClientes(){
-        return ResponseEntity.ok(this.clientes.findAll());
     }
 
     @GetMapping("/api/clientes/{id}")
@@ -67,6 +61,13 @@ public class ClienteController {
                 }).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/api/clientes")
+    @ResponseBody
+    public ResponseEntity find(@RequestBody Cliente filtro){
+        ExampleMatcher matcher = ExampleMatcher.matching().withIgnoreCase().withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+        Example<Cliente> example = Example.of(filtro, matcher);
 
-
+        List<Cliente> lista = clientes.findAll(example);
+        return ResponseEntity.ok(lista);
+    }
 }
