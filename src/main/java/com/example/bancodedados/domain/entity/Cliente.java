@@ -1,5 +1,7 @@
 package com.example.bancodedados.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import java.util.Set;
 
@@ -14,6 +16,7 @@ public class Cliente {
     @Column(name = "nome", length = 100)
     private String nome;
 
+    @JsonIgnore // o parser de json não parseia esse elemento (nao vai aparecer no restorno do POST por exemplo)
     @OneToMany(mappedBy = "cliente")
     private Set<Pedido> pedidos;
 
